@@ -3,5 +3,5 @@ export interface Employee {
   name: string;
   email: string;
   hourlyRate: number;
-  overtimeHourlyRate: number;
+  hourlyRateOvertime: number;
 }
