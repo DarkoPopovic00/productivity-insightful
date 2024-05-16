@@ -6,7 +6,7 @@ import { EmployeeService, ShiftService } from '../../../shared/data-access';
 import { DashboardCalculationService } from './dashboard-calculation.service';
 
 @Injectable()
-export class DashboardService {
+export class DashboardStateService {
     private dashboardInformationSubject = new BehaviorSubject<DashboardInformation>(new DashboardInformation());
     public dashboardInformation$ = this.dashboardInformationSubject.asObservable();
 

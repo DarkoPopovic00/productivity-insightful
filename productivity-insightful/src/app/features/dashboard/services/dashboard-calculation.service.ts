@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Employee, Shift } from '../../../shared/data-access/models';
 import { DashboardEmployee } from '../models/dashboard-employee';
 import { DashboardInformation } from '../models/dashboard-information';
+import { DateHelperService, Employee, Shift } from '../../../shared';
 
 @Injectable({ providedIn: 'root' })
 export class DashboardCalculationService {
+    constructor(private dateHelper: DateHelperService) {}
+
     getData(employees: Employee[], shifts: Shift[]) {
         const dashboardInformation = new DashboardInformation();
         const dashboardEmployees = [];
@@ -43,7 +45,7 @@ export class DashboardCalculationService {
         response.hourlyRate = employee.hourlyRate;
         response.hourlyRateOvertime = employee.hourlyRateOvertime;
 
-        const billableData = this.calculateEmployeeBillabelData(shifts, employee.hourlyRate, employee.hourlyRateOvertime)
+        const billableData = this.calculateEmployeeBillabelData(shifts, employee.hourlyRate, employee.hourlyRateOvertime);
 
         response.totalClockedInTime = billableData.totalClockedInTime;
         response.totalAmountPaidForRegularHours = billableData.totalAmountPaidForRegularHours;
@@ -59,33 +61,33 @@ export class DashboardCalculationService {
         const hoursByDate = new Map<string, number>();
 
         shifts.forEach((shift) => {
-            const clockInDate = this.getDate(shift.clockIn);
-            const clockOutDate = this.getDate(shift.clockOut);
+            const clockInDate = this.dateHelper.getDate(shift.clockIn);
+            const clockOutDate = this.dateHelper.getDate(shift.clockOut);
 
             // is shift start and end in same day
-            if (!this.isMultiDayShift(shift.clockIn, shift.clockOut)) {
+            if (!this.dateHelper.isMultiDaySpan(shift.clockIn, shift.clockOut)) {
                 if (hoursByDate.has(clockInDate)) {
                     let workedTime = hoursByDate.get(clockInDate)!;
-                    workedTime += this.calculateTimeDifferenceInSeconds(shift.clockOut, shift.clockIn);
+                    workedTime += this.dateHelper.calculateTimeDifferenceInSeconds(shift.clockOut, shift.clockIn);
                     hoursByDate.set(clockInDate, workedTime);
                 } else {
-                    hoursByDate.set(clockInDate, this.calculateTimeDifferenceInSeconds(shift.clockOut, shift.clockIn));
+                    hoursByDate.set(clockInDate, this.dateHelper.calculateTimeDifferenceInSeconds(shift.clockOut, shift.clockIn));
                 }
             } else {
                 if (hoursByDate.has(clockInDate)) {
                     let workedTime = hoursByDate.get(clockInDate)!;
-                    workedTime += this.calculateSecondsUntilEndOfDay(shift.clockIn);
+                    workedTime += this.dateHelper.calculateSecondsUntilEndOfDay(shift.clockIn);
                     hoursByDate.set(clockInDate, workedTime);
                 } else {
-                    hoursByDate.set(clockInDate, this.calculateSecondsUntilEndOfDay(shift.clockIn));
+                    hoursByDate.set(clockInDate, this.dateHelper.calculateSecondsUntilEndOfDay(shift.clockIn));
                 }
 
                 if (hoursByDate.has(clockOutDate)) {
                     let workedTime2 = hoursByDate.get(clockOutDate)!;
-                    workedTime2 += this.calculateSecondsFromStartOfDay(shift.clockOut);
+                    workedTime2 += this.dateHelper.calculateSecondsFromStartOfDay(shift.clockOut);
                     hoursByDate.set(clockOutDate, workedTime2);
                 } else {
-                    hoursByDate.set(clockOutDate, this.calculateSecondsFromStartOfDay(shift.clockOut));
+                    hoursByDate.set(clockOutDate, this.dateHelper.calculateSecondsFromStartOfDay(shift.clockOut));
                 }
             }
         });
@@ -103,46 +105,10 @@ export class DashboardCalculationService {
             regularHours += hours > 8 ? 8 : hours;
         }
 
-        return { totalAmountPaidForOvertime:hourlyRateOvertime * overtimeHours, totalAmountPaidForRegularHours: hourlyRate * regularHours, totalClockedInTime: overtimeHours + regularHours };
-    }
-
-    getDate(time: number): string {
-        const date = new Date(time);
-        return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
-    }
-
-    calculateSecondsUntilEndOfDay(time: number): number {
-        var d = new Date(time);
-        var h = d.getHours();
-        var m = d.getMinutes();
-        var s = d.getSeconds();
-        return 24 * 60 * 60 - h * 60 * 60 - m * 60 - s;
-    }
-
-    calculateSecondsFromStartOfDay(time: number): number {
-        var d = new Date(time);
-        var h = d.getHours();
-        var m = d.getMinutes();
-        var s = d.getSeconds();
-        return h * 60 * 60 + m * 60 + s;
-    }
-
-    private calculateTimeDifferenceInSeconds(time2: number, time1: number): number {
-        return (time2 - time1) / 1000;
-    }
-
-    isMultiDayShift(startTime: number, endTime: number): boolean {
-        return this.getDate(startTime) !== this.getDate(endTime);
-    }
-
-    convertSecondsToTime(seconds: number): string {
-        const isNegative = seconds < 0;
-
-        const hours = Math.floor(seconds / 3600);
-        seconds %= 3600;
-        const minutes = Math.floor(seconds / 60);
-        seconds = seconds % 60;
-
-        return `${isNegative ? '-' : ''}${Math.abs(hours).toString().padStart(2, '0')}:${Math.abs(minutes).toString().padStart(2, '0')}`;
+        return {
+            totalAmountPaidForOvertime: hourlyRateOvertime * overtimeHours,
+            totalAmountPaidForRegularHours: hourlyRate * regularHours,
+            totalClockedInTime: overtimeHours + regularHours,
+        };
     }
 }

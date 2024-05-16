@@ -31,7 +31,7 @@
     </mat-card>
 
     <div class="mt-3">
-        <button mat-button (click)="onBulkEditClicked()">Bulk Edit</button>
+        <button mat-stroked-button (click)="onBulkEditClicked()" [disabled]="!isAnyRowSelected">Bulk Edit</button>
     </div>
 
     <div class="mt-3">

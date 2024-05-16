@@ -15,8 +15,7 @@ import { TimePickerComponent } from '../../../../shared/components/time-picker/t
     standalone: true,
     imports: [MatInputModule, ReactiveFormsModule, MatTableModule, MatPaginatorModule, MatSelectModule, TotalTimeUpdateDirective, TimePickerComponent],
     templateUrl: './employee-edit.component.html',
-    styleUrl: './employee-edit.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EmployeeEditComponent implements OnInit {
     employee = input.required<DashboardEmployee>();
@@ -38,6 +37,19 @@ export class EmployeeEditComponent implements OnInit {
 
     ngOnInit(): void {
         this.form = this.formFactory.create(this.employee());
+        this.getShiftsForEmployee();
+        this.formCreated.emit(this.form);
+    }
+
+    applyFilter(filterValue: string | null) {
+        if (!filterValue) {
+            return;
+        }
+        this.shiftsDataSource.filterPredicate = (data, filter) => data.get('date')?.value === filter;
+        this.shiftsDataSource.filter = filterValue?.trim().toLowerCase();
+    }
+
+    private getShiftsForEmployee(): void {
         this.shiftService.getShiftsForEmployee(this.employee().id).subscribe((shifts) => {
             this.formFactory.createShiftsArray(this.form, shifts);
             this.shiftsDataSource = new MatTableDataSource<AbstractControl<any>>(this.shifts);
@@ -47,17 +59,5 @@ export class EmployeeEditComponent implements OnInit {
             this.applyFilter(this.selectedFilter);
             this.shiftsDataSource.paginator = this.paginator;
         });
-
-        this.formCreated.emit(this.form);
-    }
-
-    applyFilter(value: string | null) {
-        const filterValue = value;
-        if (!filterValue) {
-            return;
-        }
-        this.shiftsDataSource.filterPredicate = (data, filter) => data.get('date')?.value === filter;
-        this.shiftsDataSource.filter = filterValue?.trim().toLowerCase();
-        // this.cdr.markForCheck();
     }
 }

@@ -6,7 +6,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { BulkEditDialogComponent } from './components/bulk-edit-dialog/bulk-edit-dialog.component';
-import { DashboardService } from './services/dashboard.service';
+import { DashboardStateService } from './services/dashboard-state.service';
 import { DashboardEmployee } from './models/dashboard-employee';
 import { BulkSaveService } from './services/bulk-save.service';
 
@@ -16,7 +16,7 @@ import { BulkSaveService } from './services/bulk-save.service';
     imports: [AsyncPipe, MatCardModule, DecimalPipe, CurrencyPipe, TableComponent, MatButtonModule],
     templateUrl: './dashboard.component.html',
     styleUrl: './dashboard.component.scss',
-    providers: [DashboardService, BulkSaveService],
+    providers: [DashboardStateService, BulkSaveService],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent {
@@ -24,7 +24,11 @@ export class DashboardComponent {
     dashboardEmployees = toSignal(this.dashboardService.dashboardEmployees$);
     selectedRows: DashboardEmployee[] = [];
 
-    constructor(private dashboardService: DashboardService, public dialog: MatDialog, private bulkSaveService: BulkSaveService) {
+    get isAnyRowSelected(): boolean {
+        return this.selectedRows.length > 0;
+    }
+
+    constructor(private dashboardService: DashboardStateService, public dialog: MatDialog, private bulkSaveService: BulkSaveService) {
         this.dashboardService.init();
     }
 

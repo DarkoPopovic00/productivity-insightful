@@ -2,12 +2,12 @@ import { DestroyRef, Directive, Input, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AbstractControl, FormGroup } from '@angular/forms';
 import { combineLatest, startWith, tap } from 'rxjs';
-import { DashboardCalculationService } from '../../services/dashboard-calculation.service';
+import { DateHelperService } from '../../../../shared';
 
 @Directive({ selector: '[appTotalTimeUpdate]', standalone: true })
 export class TotalTimeUpdateDirective implements OnInit {
     @Input({ required: true, alias: 'appTotalTimeUpdate' }) formGroup!: FormGroup;
-    private dashboardCalculationService = inject(DashboardCalculationService);
+    private dateHelperService = inject(DateHelperService);
 
     get clockInTimeControl() {
         return this.formGroup.get('clockInTime') as AbstractControl;
@@ -35,7 +35,7 @@ export class TotalTimeUpdateDirective implements OnInit {
             .pipe(
                 takeUntilDestroyed(this.destroyRef),
                 tap(([clockIn, clockOut]: [Date, Date]) => {
-                    const totalTime = this.dashboardCalculationService.convertSecondsToTime((clockOut.getTime() - clockIn.getTime()) / 1000);
+                    const totalTime = this.dateHelperService.convertSecondsToTime((clockOut.getTime() - clockIn.getTime()) / 1000);
                     this.totalTimeControl.setValue(totalTime);
                 })
             )

@@ -13,5 +13,4 @@ import {MatToolbarModule} from '@angular/material/toolbar';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
-  title = 'productivity-insightful';
 }

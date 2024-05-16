@@ -1,0 +1,1 @@
+export { TimePickerComponent } from './time-picker/time-picker.component';

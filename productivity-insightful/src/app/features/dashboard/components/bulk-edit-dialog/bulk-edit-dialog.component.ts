@@ -3,11 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatButtonModule } from '@angular/material/button';
 import { EmployeeEditComponent } from '../employee-edit/employee-edit.component';
 import { DashboardEmployee } from '../../models/dashboard-employee';
-import { FormArray, FormGroup } from '@angular/forms';
-import { DashboardCalculationService } from '../../services/dashboard-calculation.service';
-import { ShiftFormModel } from '../employee-edit/form.factory';
-import { Shift } from '../../../../shared/data-access';
-import { ShiftType } from '../employee-edit/shift-types';
+import { FormGroup } from '@angular/forms';
 import { BulkSaveFactoryService } from '../../services/bulk-save-factory.service';
 
 export interface BulkEditDialogData {
@@ -19,7 +15,6 @@ export interface BulkEditDialogData {
     standalone: true,
     imports: [MatDialogModule, MatButtonModule, EmployeeEditComponent],
     templateUrl: './bulk-edit-dialog.component.html',
-    styleUrl: './bulk-edit-dialog.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BulkEditDialogComponent {
@@ -35,8 +30,16 @@ export class BulkEditDialogComponent {
     }
 
     onSaveClicked(): void {
+        if(this.isAnyFormInvalid()) {
+            return;
+        }
+        
         const changedForms = this.allForms.filter((f) => f.dirty);
         const data = this.bulkSaveService.create(this.data.employees, changedForms);
-      this.dialogRef.close({action: 'save', data})
+        this.dialogRef.close({ action: 'save', data });
+    }
+
+    isAnyFormInvalid(): boolean {
+        return this.allForms.some(f => f.invalid);
     }
 }
