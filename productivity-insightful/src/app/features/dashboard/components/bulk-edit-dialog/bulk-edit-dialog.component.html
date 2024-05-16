@@ -1,0 +1,11 @@
+<h2 mat-dialog-title>Bulk Edit</h2>
+<mat-dialog-content class="mat-typography">
+@for (employee of data.employees;let index = $index; track index) {
+    <h3 class="font-bold">{{index + 1}}. Employee</h3>
+    <app-employee-edit [employee]="employee" (formCreated)="onFormCreated($event)"></app-employee-edit>
+}
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button [mat-dialog-close]="true" cdkFocusInitial (click)="onSaveClicked()">Save</button>
+</mat-dialog-actions>

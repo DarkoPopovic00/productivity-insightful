@@ -1,9 +1,18 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, computed, input } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  OnInit,
+  computed,
+  inject,
+  input,
+  output,
+} from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { DashboardEmployee } from '../../../../shared/data-access';
 import { CurrencyPipe, DecimalPipe } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DashboardEmployee } from '../../models/dashboard-employee';
 
 @Component({
   selector: 'app-table',
@@ -12,8 +21,9 @@ import { CurrencyPipe, DecimalPipe } from '@angular/common';
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
 })
-export class TableComponent {
+export class TableComponent implements OnInit {
   employees = input<DashboardEmployee[]>([]);
+  rowSelectionChanged = output<DashboardEmployee[]>();
   displayedColumns: string[] = [
     'select',
     'name',
@@ -22,8 +32,17 @@ export class TableComponent {
     'totalAmountPaidForRegularHours',
     'totalOvertimeAmountPaid',
   ];
-  dataSource = computed(() =>  new MatTableDataSource<DashboardEmployee>(this.employees()));
+  dataSource = computed(
+    () => new MatTableDataSource<DashboardEmployee>(this.employees())
+  );
   selection = new SelectionModel<DashboardEmployee>(true, []);
+  private destroyRef = inject(DestroyRef);
+
+  ngOnInit(): void {
+    this.selection.changed
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.rowSelectionChanged.emit(this.selection.selected));
+  }
 
   isAllSelected() {
     const numSelected = this.selection.selected.length;

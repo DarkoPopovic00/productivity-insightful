@@ -12,4 +12,8 @@ export class ShiftService {
   getAll(): Observable<Shift[]> {
     return this.httpClient.get<Shift[]>(`${this.baseUrl}/shifts`);
   }
+
+  getShiftsForEmployee(employeeId: string): Observable<Shift[]> {
+    return this.httpClient.get<Shift[]>(`${this.baseUrl}/shifts?employeeId=${employeeId}`);
+  }
 }
