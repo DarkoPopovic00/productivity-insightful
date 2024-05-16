@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
+import { formatDate } from '@angular/common';
+import { Inject, Injectable, LOCALE_ID } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class DateHelperService {
-    constructor() {}
+    constructor(@Inject(LOCALE_ID) private locale: string) {}
 
     calculateSecondsUntilEndOfDay(time: number): number {
         var d = new Date(time);
@@ -29,8 +30,7 @@ export class DateHelperService {
     }
 
     getDate(time: number): string {
-        const date = new Date(time);
-        return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+        return formatDate(time, 'dd/MM/yyyy', this.locale); 
     }
 
     convertSecondsToTime(seconds: number): string {

@@ -52,11 +52,14 @@ export class EmployeeEditComponent implements OnInit {
         this.shiftService.getShiftsForEmployee(this.employee().id).subscribe((shifts) => {
             this.formFactory.createShiftsArray(this.form, shifts);
             this.shiftsDataSource = new MatTableDataSource<AbstractControl<any>>(this.shifts);
-
-            this.shifts.forEach((shift) => this.dates.add(shift.get('date')?.value));
-            this.selectedFilter = Array.from(this.dates).pop() ?? null;
-            this.applyFilter(this.selectedFilter);
+            this.setDatesForFilter();
             this.shiftsDataSource.paginator = this.paginator;
         });
+    }
+
+    private setDatesForFilter(): void{
+        this.shifts.forEach((shift) => this.dates.add(shift.get('date')?.value));
+        this.selectedFilter = Array.from(this.dates).shift() ?? null;
+        this.applyFilter(this.selectedFilter);
     }
 }

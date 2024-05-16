@@ -20,11 +20,11 @@ export class DashboardEmployeeFormFactoryService {
     createShiftsArray(form: FormGroup, shifts: Shift[]): void {
         [...shifts]
             .sort((a, b) => a.clockIn - b.clockIn)
-            .forEach((shift, index) => {
-                this.createSingleShift(shift, index).forEach((shift) => {
-                    (form.get('shifts') as FormArray).push(shift);
-                });
-            });
+            .map((shift, index) => {
+                return this.createSingleShift(shift, index);
+            })
+            .reverse()
+            .forEach((shifts) => shifts.forEach((shift) => (form.get('shifts') as FormArray).push(shift)));
     }
 
     private createSingleShift(shift: Shift, index: number): FormGroup[] {
@@ -41,7 +41,7 @@ export class DashboardEmployeeFormFactoryService {
                     id: shift.id,
                     clockInTime: clockIn,
                     clockOutTime: [{ value: new Date(new Date(clockOut).setHours(0, 0, 0, 0)), disabled: true }],
-                    totalTime: [this.dateHelperService.convertSecondsToTime(firstShiftSecondsUntilMidnight)],
+                    totalTime: this.dateHelperService.convertSecondsToTime(firstShiftSecondsUntilMidnight),
                     date: this.dateHelperService.getDate(shift.clockIn),
                 }),
                 this.fb.group({
@@ -49,7 +49,7 @@ export class DashboardEmployeeFormFactoryService {
                     id: shift.id,
                     clockInTime: [{ value: new Date(new Date(clockOut).setHours(0, 0, 0, 0)), disabled: true }],
                     clockOutTime: clockOut,
-                    totalTime: [this.dateHelperService.convertSecondsToTime(secondShiftSecondsAfterMidnight)],
+                    totalTime: this.dateHelperService.convertSecondsToTime(secondShiftSecondsAfterMidnight),
                     date: this.dateHelperService.getDate(shift.clockOut),
                 }),
             ];
@@ -61,7 +61,7 @@ export class DashboardEmployeeFormFactoryService {
                     id: shift.id,
                     clockInTime: clockIn,
                     clockOutTime: clockOut,
-                    totalTime: [{ value: totalTime, disabled: true }],
+                    totalTime: totalTime,
                     date: this.dateHelperService.getDate(shift.clockIn),
                 }),
             ];

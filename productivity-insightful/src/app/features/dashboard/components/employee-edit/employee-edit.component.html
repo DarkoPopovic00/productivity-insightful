@@ -18,15 +18,17 @@
 
     <h3 class="my-3 font-bold">Shifts</h3>
 
-    <mat-form-field>
-        <mat-label>Filter</mat-label>
-        <mat-select (valueChange)="applyFilter($event)" [(value)]="selectedFilter">
-            @for (date of dates.values(); track date) {
-              <mat-option [value]="date" value>{{date}}</mat-option>
-            }
-          </mat-select>
-    </mat-form-field>
-
+    <div class="flex justify-end">
+        <mat-form-field>
+            <mat-label>Date</mat-label>
+            <mat-select (valueChange)="applyFilter($event)" [(value)]="selectedFilter">
+                @for (date of dates.values(); track date) {
+                    <mat-option [value]="date" value>{{date}}</mat-option>
+                }
+            </mat-select>
+        </mat-form-field>
+    </div>
+        
     <ng-container formArrayName="shifts">
         <table mat-table [dataSource]="shiftsDataSource" class="mat-elevation-z8">
 
@@ -62,6 +64,6 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;" [appTotalTimeUpdate]="row"></tr>
 
         </table>
-        <mat-paginator [pageSizeOptions]="[5, 10, 25]" aria-label="Select page of shifts"></mat-paginator>
+        <mat-paginator [pageSizeOptions]="[5]" aria-label="Select page of shifts"></mat-paginator>
     </ng-container>
 </form>
