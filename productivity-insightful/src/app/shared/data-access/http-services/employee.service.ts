@@ -6,10 +6,14 @@ import { HttpClient } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class EmployeeService {
-  private baseUrl = environment.baseApiUrl;
-  constructor(private httpClient: HttpClient) {}
+    private baseUrl = environment.baseApiUrl;
+    constructor(private httpClient: HttpClient) {}
 
-  getAll(): Observable<Employee[]> {
-    return this.httpClient.get<Employee[]>(`${this.baseUrl}/employees`);
-  }
+    getAll(): Observable<Employee[]> {
+        return this.httpClient.get<Employee[]>(`${this.baseUrl}/employees`);
+    }
+
+    saveEmployee(employee: Employee): Observable<Employee> {
+        return this.httpClient.patch<Employee>(`${this.baseUrl}/employees/${employee.id}`, employee);
+    }
 }

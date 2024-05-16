@@ -11,6 +11,7 @@ export class DashboardEmployeeFormFactoryService {
 
     create(employee: DashboardEmployee): FormGroup {
         return this.fb.group({
+            id: [employee.id],
             name: [employee.name, Validators.required],
             hourlyRate: [employee.hourlyRate, [Validators.min(0.01), Validators.required]],
             hourlyRateOvertime: [employee.hourlyRateOvertime, [Validators.min(0.01), Validators.required]],
@@ -72,3 +73,22 @@ export class DashboardEmployeeFormFactoryService {
 
     }
 }
+
+
+export interface ShiftFormModel {
+    name: string;
+    id: string;
+    clockInTime: Date;
+    clockOutTime: Date;
+    totalTime: string;
+    date: string;
+    type: ShiftType;
+  }
+
+  export interface DashboardEmployeeForm{
+    id:string,
+    name: string,
+    hourlyRate: number,
+    hourlyRateOvertime:number,
+    shifts: ShiftFormModel[],
+  }

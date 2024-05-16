@@ -41,11 +41,17 @@ export class TimePickerComponent  extends BaseControlValueAccessor<Date>{
     this.value = newValue;
   }
 
-  private getHours(time:string): number {
+  private getHours(time?:string): number {
+    if(!time) {
+      return 0;
+    }
     return Number(time.split(':')[0]);
   }
 
-  private getMinutes(time:string): number {
+  private getMinutes(time?:string): number {
+    if(!time) {
+      return 0;
+    }
     return Number(time.split(':')[1]);
   }
 }

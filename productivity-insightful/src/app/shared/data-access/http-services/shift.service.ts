@@ -16,4 +16,8 @@ export class ShiftService {
   getShiftsForEmployee(employeeId: string): Observable<Shift[]> {
     return this.httpClient.get<Shift[]>(`${this.baseUrl}/shifts?employeeId=${employeeId}`);
   }
+
+  saveShift(shift: Shift): Observable<Shift> {
+    return this.httpClient.patch<Shift>(`${this.baseUrl}/shifts/${shift.id}`, shift);
+}
 }

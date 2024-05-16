@@ -27,4 +27,12 @@ export class DashboardService {
             map(() => undefined)
         ).subscribe();
     }
+
+    updateDashboardInformation(data: DashboardInformation): void {
+        this.dashboardInformationSubject.next(data);
+    }
+
+    updateDashboardEmployee(items: DashboardEmployee[]): void {
+        this.dashboardEmployeesSubject.next(items);
+    }
 }

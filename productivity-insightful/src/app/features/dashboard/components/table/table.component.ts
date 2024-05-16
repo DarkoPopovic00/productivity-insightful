@@ -30,10 +30,12 @@ export class TableComponent implements OnInit {
     'email',
     'totalClockedInTime',
     'totalAmountPaidForRegularHours',
-    'totalOvertimeAmountPaid',
+    'totalAmountPaidForOvertimeHours',
   ];
   dataSource = computed(
-    () => new MatTableDataSource<DashboardEmployee>(this.employees())
+    () =>{
+      this.selection.clear();
+      return new MatTableDataSource<DashboardEmployee>(this.employees())}
   );
   selection = new SelectionModel<DashboardEmployee>(true, []);
   private destroyRef = inject(DestroyRef);

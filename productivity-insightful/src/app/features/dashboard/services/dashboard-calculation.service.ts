@@ -34,15 +34,29 @@ export class DashboardCalculationService {
         return shiftsByEmployee;
     }
 
-    private createDashboardEmployee(employee: Employee, shifts: Shift[]): DashboardEmployee {
+    public createDashboardEmployee(employee: Employee, shifts: Shift[]): DashboardEmployee {
         const response = new DashboardEmployee();
-        const hoursByDate = new Map<string, number>();
 
         response.id = employee.id;
         response.name = employee.name;
         response.email = employee.email;
         response.hourlyRate = employee.hourlyRate;
         response.hourlyRateOvertime = employee.hourlyRateOvertime;
+
+        const billableData = this.calculateEmployeeBillabelData(shifts, employee.hourlyRate, employee.hourlyRateOvertime)
+
+        response.totalClockedInTime = billableData.totalClockedInTime;
+        response.totalAmountPaidForRegularHours = billableData.totalAmountPaidForRegularHours;
+        response.totalAmountPaidForOvertime = billableData.totalAmountPaidForOvertime;
+        return response;
+    }
+
+    public calculateEmployeeBillabelData(
+        shifts: Shift[],
+        hourlyRate: number,
+        hourlyRateOvertime: number
+    ): { totalClockedInTime: number; totalAmountPaidForRegularHours: number; totalAmountPaidForOvertime: number } {
+        const hoursByDate = new Map<string, number>();
 
         shifts.forEach((shift) => {
             const clockInDate = this.getDate(shift.clockIn);
@@ -89,10 +103,7 @@ export class DashboardCalculationService {
             regularHours += hours > 8 ? 8 : hours;
         }
 
-        response.totalClockedInTime = overtimeHours + regularHours;
-        response.totalAmountPaidForRegularHours = employee.hourlyRate * regularHours;
-        response.totalAmountPaidForOvertime = employee.hourlyRateOvertime * overtimeHours;
-        return response;
+        return { totalAmountPaidForOvertime:hourlyRateOvertime * overtimeHours, totalAmountPaidForRegularHours: hourlyRate * regularHours, totalClockedInTime: overtimeHours + regularHours };
     }
 
     getDate(time: number): string {
@@ -132,6 +143,6 @@ export class DashboardCalculationService {
         const minutes = Math.floor(seconds / 60);
         seconds = seconds % 60;
 
-        return `${isNegative? '-': ''}${Math.abs(hours).toString().padStart(2, '0')}:${Math.abs(minutes).toString().padStart(2, '0')}`
+        return `${isNegative ? '-' : ''}${Math.abs(hours).toString().padStart(2, '0')}:${Math.abs(minutes).toString().padStart(2, '0')}`;
     }
 }
