@@ -1,7 +1,3 @@
-<!-- @for(employee of employees$ | async; track $index) {
-    <div>{{employee.name}}</div>
-} -->
-
 <div class="pi-container mt-6">
     <mat-card>
         <mat-card-header>
@@ -15,7 +11,7 @@
                 </div>
                 <div>
                     <label>Total Clocked in time:</label>
-                    <h5>{{(dashboardInformation()?.totalClockedTime ?? 0) | number}}</h5>
+                    <h5>{{(dashboardInformation()?.totalClockedTime ?? 0) | number}} h</h5>
 
                 </div>
                 <div>

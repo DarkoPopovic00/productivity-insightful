@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { EmployeeService, ShiftService } from '../../../shared/data-access';
 import { forkJoin, tap, withLatestFrom } from 'rxjs';
 import { DashboardStateService } from './dashboard-state.service';
 import { DashboardInformation } from '../models/dashboard-information';
 import { DashboardEmployee } from '../models/dashboard-employee';
 import { BulkSaveRequest } from '../models/bulk-save-request';
+import { EmployeeService, ShiftService } from '../../../shared';
 
 @Injectable()
 export class BulkSaveService {

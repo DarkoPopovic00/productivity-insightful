@@ -1,4 +1,4 @@
-import { Employee, Shift } from '../../../shared/data-access';
+import { Employee, Shift } from '../../../shared';
 
 export interface BulkSaveRequest {
     employeeForUpdate: Employee;

@@ -5,10 +5,9 @@ import { AbstractControl, FormArray, FormGroup, ReactiveFormsModule } from '@ang
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { DashboardEmployee } from '../../models/dashboard-employee';
-import { ShiftService } from '../../../../shared/data-access';
 import { MatSelectModule } from '@angular/material/select';
 import { TotalTimeUpdateDirective } from './total-time-update.directive';
-import { TimePickerComponent } from '../../../../shared/components/time-picker/time-picker.component';
+import { ShiftService, TimePickerComponent } from '../../../../shared';
 
 @Component({
     selector: 'app-employee-edit',

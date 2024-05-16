@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormArray } from '@angular/forms';
-import { Shift } from '../../../shared/data-access';
 import { ShiftFormModel } from '../components/employee-edit/form.factory';
+import { Shift } from '../../../shared';
 
 @Injectable({providedIn: 'root'})
 export class ShiftHelperService {

@@ -1,9 +1,9 @@
 import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject, Observable, forkJoin, map, tap } from 'rxjs';
+import { BehaviorSubject, forkJoin, map, tap } from 'rxjs';
 import { DashboardInformation } from '../models/dashboard-information';
 import { DashboardEmployee } from '../models/dashboard-employee';
-import { EmployeeService, ShiftService } from '../../../shared/data-access';
-import { DashboardCalculationService } from './dashboard-calculation.service';
+import { DashboardService } from './dashboard.service';
+import { EmployeeService, ShiftService } from '../../../shared';
 
 @Injectable()
 export class DashboardStateService {
@@ -15,12 +15,12 @@ export class DashboardStateService {
 
     private employeeService = inject(EmployeeService);
     private shiftService = inject(ShiftService);
-    private dashboardCalculationService = inject(DashboardCalculationService);
+    private dashboardCalculationService = inject(DashboardService);
 
     init(): void {
         forkJoin([this.employeeService.getAll(), this.shiftService.getAll()]).pipe(
             tap(([employees, shifts]) => {
-                const { dashboardEmployees, dashboardInformation } = this.dashboardCalculationService.getData(employees, shifts);
+                const { dashboardEmployees, dashboardInformation } = this.dashboardCalculationService.getInitialData(employees, shifts);
                 this.dashboardEmployeesSubject.next(dashboardEmployees);
                 this.dashboardInformationSubject.next(dashboardInformation);
             }),

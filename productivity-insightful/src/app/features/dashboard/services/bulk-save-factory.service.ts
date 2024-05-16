@@ -2,13 +2,13 @@ import { Injectable, inject } from '@angular/core';
 import { DashboardEmployee } from '../models/dashboard-employee';
 import { FormArray, FormGroup } from '@angular/forms';
 import { DashboardEmployeeForm } from '../components/employee-edit/form.factory';
-import { DashboardCalculationService } from './dashboard-calculation.service';
+import { DashboardService } from './dashboard.service';
 import { BulkSaveRequest } from '../models/bulk-save-request';
 import { ShiftHelperService } from './shift-helper.service';
 
 @Injectable({ providedIn: 'root' })
 export class BulkSaveFactoryService {
-    private dashboardCalculationService = inject(DashboardCalculationService);
+    private dashboardCalculationService = inject(DashboardService);
     private shiftHelperService = inject(ShiftHelperService);
 
     create(currentEmployeeData: DashboardEmployee[], employeeForms: FormGroup[]): BulkSaveRequest[] {

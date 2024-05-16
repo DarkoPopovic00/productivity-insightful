@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DashboardEmployee } from '../../models/dashboard-employee';
-import { Shift } from '../../../../shared/data-access';
-import { DateHelperService } from '../../../../shared';
+import { DateHelperService, Shift } from '../../../../shared';
 
 @Injectable({ providedIn: 'root' })
 export class DashboardEmployeeFormFactoryService {
