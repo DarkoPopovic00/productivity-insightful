@@ -34,7 +34,7 @@ export class BulkSaveFactoryService {
             employeeFormValue.hourlyRateOvertime
         );
 
-        var response = {
+        const response = {
             employeeForUpdate: {
                 id: currentEmployee.id,
                 email: currentEmployee.email,

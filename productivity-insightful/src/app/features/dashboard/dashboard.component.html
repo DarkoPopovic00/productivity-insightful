@@ -6,32 +6,28 @@
         <mat-card-content>
             <div class="grid grid-cols-2">
                 <div>
-                    <label>Total number of employees:</label>
-                    <h5>{{dashboardInformation()?.totalNumberOfEmployees ?? 0}}</h5>
+                    <h4 class="mb-1">Total number of employees:</h4>
+                    <h4>{{dashboardInformation()?.totalNumberOfEmployees ?? 0}}</h4>
                 </div>
                 <div>
-                    <label>Total Clocked in time:</label>
-                    <h5>{{(dashboardInformation()?.totalClockedTime ?? 0) | number}} h</h5>
-
+                    <h4 class="mb-1">Total Clocked in time:</h4>
+                    <h4>{{(dashboardInformation()?.totalClockedTime ?? 0) | number}} h</h4>
                 </div>
                 <div>
-                    <label>Total amount paid for regular hours:</label>
-                    <h5>{{(dashboardInformation()?.totalAmountPaidForRegularHours ?? 0)| currency}}</h5>
+                    <h4 class="mb-1">Total amount paid for regular hours:</h4>
+                    <h4>{{(dashboardInformation()?.totalAmountPaidForRegularHours ?? 0)| currency}}</h4>
                 </div>
                 <div>
-                    <label>Total amount paid for overtime hours:</label>
-                    <h5>{{(dashboardInformation()?.totalAmountPaidForOvertimeHours ?? 0)| currency}}</h5>
+                    <h4 class="mb-1">Total amount paid for overtime hours:</h4>
+                    <h4>{{(dashboardInformation()?.totalAmountPaidForOvertimeHours ?? 0)| currency}}</h4>
                 </div>
             </div>
         </mat-card-content>
     </mat-card>
 
-    <div class="mt-3">
-        <button mat-stroked-button (click)="onBulkEditClicked()" [disabled]="!isAnyRowSelected">Bulk Edit</button>
-    </div>
 
     <div class="mt-3">
-        <app-table [employees]="(dashboardEmployees()) ?? []" (rowSelectionChanged)="rowSelectionChanged($event)"></app-table>
+        <app-employee-list [employees]="(dashboardEmployees()) ?? []"></app-employee-list>
     </div>
 
 </div>

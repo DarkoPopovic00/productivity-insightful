@@ -20,7 +20,7 @@ export class BulkSaveService {
             ...request.shiftsForUpdate.map((shift) => this.shiftService.saveShift(shift)),
         ]).pipe(
             withLatestFrom(this.dashboardService.dashboardInformation$, this.dashboardService.dashboardEmployees$),
-            tap(([[], dashboardInformation, dashboardEmployees]) => {
+            tap(([, dashboardInformation, dashboardEmployees]) => {
                 this.updateDashboardInformation(dashboardInformation, request);
                 this.updateDashboardEmployees(dashboardEmployees, request);
             })

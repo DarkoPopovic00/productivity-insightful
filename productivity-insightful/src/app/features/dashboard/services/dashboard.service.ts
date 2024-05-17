@@ -27,15 +27,6 @@ export class DashboardService {
         return { dashboardInformation, dashboardEmployees };
     }
 
-    private getShiftsByEmployee(shifts: Shift[]): Map<string, Shift[]> {
-        const shiftsByEmployee = new Map();
-
-        shifts.forEach((shift) =>
-            shiftsByEmployee.has(shift.employeeId) ? shiftsByEmployee.get(shift.employeeId)?.push(shift) : shiftsByEmployee.set(shift.employeeId, [shift])
-        );
-        return shiftsByEmployee;
-    }
-
     public createDashboardEmployee(employee: Employee, shifts: Shift[]): DashboardEmployee {
         const billableData = this.calculateEmployeeBillabelData(shifts, employee.hourlyRate, employee.hourlyRateOvertime);
         return {
@@ -62,14 +53,14 @@ export class DashboardService {
         const secondsInAnHour = 3600;
         
         for (const [, timeInSeconds] of secondsPerDate) {
-            const hours = timeInSeconds / secondsInAnHour;
+            const hours = +(timeInSeconds / secondsInAnHour).toFixed(2);
             const overtime = Math.max(0, hours - overtimeThreshold);
             overtimeHours += overtime;
             regularHours += Math.min(hours, overtimeThreshold);
         }
         
-        const totalAmountPaidForOvertime = hourlyRateOvertime * overtimeHours;
-        const totalAmountPaidForRegularHours = hourlyRate * regularHours;
+        const totalAmountPaidForOvertime = +(hourlyRateOvertime * overtimeHours).toFixed(2);
+        const totalAmountPaidForRegularHours = +(hourlyRate * regularHours).toFixed(2);
         const totalClockedInTime = overtimeHours + regularHours;
         
         return {
@@ -77,6 +68,15 @@ export class DashboardService {
             totalAmountPaidForRegularHours,
             totalClockedInTime,
         };
+    }
+
+    private getShiftsByEmployee(shifts: Shift[]): Map<string, Shift[]> {
+        const shiftsByEmployee = new Map();
+
+        shifts.forEach((shift) =>
+            shiftsByEmployee.has(shift.employeeId) ? shiftsByEmployee.get(shift.employeeId)?.push(shift) : shiftsByEmployee.set(shift.employeeId, [shift])
+        );
+        return shiftsByEmployee;
     }
 
     private calculateWorkingSecondsPerDay(shifts: Shift[]): Map<string, number> {

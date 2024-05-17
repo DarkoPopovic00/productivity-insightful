@@ -22,7 +22,7 @@
         <mat-form-field>
             <mat-label>Date</mat-label>
             <mat-select (valueChange)="applyFilter($event)" [(value)]="selectedFilter">
-                @for (date of dates.values(); track date) {
+                @for (date of filterDates.values(); track date) {
                 <mat-option [value]="date" value>{{date}}</mat-option>
                 }
             </mat-select>

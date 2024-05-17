@@ -6,18 +6,18 @@ export class DateHelperService {
     constructor(@Inject(LOCALE_ID) private locale: string) {}
 
     calculateSecondsUntilEndOfDay(time: number): number {
-        var d = new Date(time);
-        var h = d.getHours();
-        var m = d.getMinutes();
-        var s = d.getSeconds();
+        const d = new Date(time);
+        const h = d.getHours();
+        const m = d.getMinutes();
+        const s = d.getSeconds();
         return 24 * 60 * 60 - h * 60 * 60 - m * 60 - s;
     }
 
     calculateSecondsFromStartOfDay(time: number): number {
-        var d = new Date(time);
-        var h = d.getHours();
-        var m = d.getMinutes();
-        var s = d.getSeconds();
+        const d = new Date(time);
+        const h = d.getHours();
+        const m = d.getMinutes();
+        const s = d.getSeconds();
         return h * 60 * 60 + m * 60 + s;
     }
 

@@ -7,7 +7,7 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { DashboardEmployee } from '../../models/dashboard-employee';
 import { MatSelectModule } from '@angular/material/select';
 import { TotalTimeUpdateDirective } from './total-time-update.directive';
-import { ShiftService, TimePickerComponent } from '../../../../shared';
+import { Shift, ShiftService, TimePickerComponent } from '../../../../shared';
 
 @Component({
     selector: 'app-employee-edit',
@@ -28,8 +28,8 @@ export class EmployeeEditComponent implements OnInit {
         return (this.form.get('shifts') as FormArray)?.controls ?? [];
     }
 
-    shiftsDataSource!: MatTableDataSource<AbstractControl<any>>;
-    dates = new Set<string>();
+    shiftsDataSource!: MatTableDataSource<AbstractControl<Shift>>;
+    filterDates = new Set<string>();
     selectedFilter: string | null = null;
     private formFactory = inject(DashboardEmployeeFormFactoryService);
     private shiftService = inject(ShiftService);
@@ -51,15 +51,15 @@ export class EmployeeEditComponent implements OnInit {
     private getShiftsForEmployee(): void {
         this.shiftService.getShiftsForEmployee(this.employee().id).subscribe((shifts) => {
             this.formFactory.createShiftsArray(this.form, shifts);
-            this.shiftsDataSource = new MatTableDataSource<AbstractControl<any>>(this.shifts);
+            this.shiftsDataSource = new MatTableDataSource<AbstractControl<Shift>>(this.shifts);
             this.setDatesForFilter();
             this.shiftsDataSource.paginator = this.paginator;
         });
     }
 
     private setDatesForFilter(): void{
-        this.shifts.forEach((shift) => this.dates.add(shift.get('date')?.value));
-        this.selectedFilter = Array.from(this.dates).shift() ?? null;
+        this.shifts.forEach((shift) => this.filterDates.add(shift.get('date')?.value));
+        this.selectedFilter = Array.from(this.filterDates).shift() ?? null;
         this.applyFilter(this.selectedFilter);
     }
 }

@@ -9,7 +9,6 @@ import {MatToolbarModule} from '@angular/material/toolbar';
   standalone: true,
   imports: [CommonModule, RouterOutlet, MatToolbarModule],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
