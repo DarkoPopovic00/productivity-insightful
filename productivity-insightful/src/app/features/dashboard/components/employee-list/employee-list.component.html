@@ -57,5 +57,5 @@
         (click)="selection.toggle(row)">
     </tr>
   </table>
-  <mat-paginator [pageSizeOptions]="[10]" aria-label="Select page of employees"></mat-paginator>
+  <mat-paginator [pageSizeOptions]="[10]" (page)="onPageChange()" aria-label="Select page of employees"></mat-paginator>
 </div>

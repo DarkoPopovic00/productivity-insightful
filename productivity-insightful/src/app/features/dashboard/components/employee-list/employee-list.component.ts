@@ -73,8 +73,8 @@ export class EmployeeListComponent {
         });
 
         dialogRef.afterClosed().subscribe((result) => {
-            this.isSaveInProgress.set(true);
             if (result.action === 'save' && result.data.length > 0) {
+                this.isSaveInProgress.set(true);
                 this.bulkSaveService.save(result.data).subscribe({
                     next: () => {
                         this.matSnackbar.open('Saved successfully!', 'close', { duration: 3000});
@@ -88,6 +88,10 @@ export class EmployeeListComponent {
                 });
             }
         });
+    }
+
+    onPageChange(): void {
+        this.selection.clear();
     }
 
     private getItemsOnActivePage(): DashboardEmployee[] {
